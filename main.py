@@ -1,4 +1,6 @@
+from abc import abstractstaticmethod
 from pydoc import doc
+from random import seed
 from Crypto.Cipher import ChaCha20
 import string
 import os
@@ -46,7 +48,30 @@ def encryption(message, key):
     ciphertext = cipher.encrypt(message)
     return ciphertext
 
-print(masterPassword())
+#Function that converts ASCII to their corresponding Decimal counterpart.
+def ASCIItoDECIMAL(toconvert): #DEBUGGED - WORKING
+    convertedArray = []
+    for char in toconvert:
+        convertedArray.append(ord(char)) #splits a string and converts them into an array of decimal
+    
+    convertedString = ' '.join([str(elem) for elem in convertedArray]) #converts the array to a string
+
+    return convertedString
+
+#Function that generates a key from a string (Password). It is reversable.
+def seedPass(): #NOT WORKING - TO FIX ASAP
+    randomNumber = 81776850632311620355058304162600 #literally just a random number
+    stringDecimalPass = ASCIItoDECIMAL(masterPassword())
+
+    key = randomNumber ^ decimalPass
+
+    return key
+#Procedure to create a TEMPORARY PLAINTEXT FILE
+def createTempPlainTXT(data): #POSSIBLE INSECURITY
+    with open("plaintextTEMP.txt", "w") as plaintext:
+        plaintext.write(data)
+
+print(seedPass())
 
 
 
