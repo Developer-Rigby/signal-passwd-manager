@@ -1,4 +1,5 @@
 from abc import abstractstaticmethod
+from lib2to3.pytree import convert
 from pydoc import doc
 from random import seed
 from Crypto.Cipher import ChaCha20
@@ -22,7 +23,7 @@ def masterPassword(): #DEBUGGED - WORKS
     print("[Password Saved]")
     return mast_passwd
 
-def userInput(): #DEBUGGED - WORKS
+def userInput(): #DEBUGGED - WORKS - COULD BE BETTER
     id = input("Please specify the service: ")
     username = input("Please state what username/email you use for this service: ")
     
@@ -36,11 +37,20 @@ def userInput(): #DEBUGGED - WORKS
             print("Those passwords did not match. Please try again.")
 
 #turning strings into bytes
-    idByte = bytes(id, 'ascii')
-    usernameByte = bytes(username, 'ascii')
-    passwordByte = bytes(password, 'ascii')    
+#  idByte = bytes(id, 'ascii')
+#   usernameByte = bytes(username, 'ascii')
+#    passwordByte = bytes(password, 'ascii')    
 
-    return idByte, usernameByte, passwordByte
+    return id, username, password
+
+#With this convertTuple
+def convertTuple(tup):
+        # initialize an empty string
+    str = ''
+    for item in tup:
+        str = str + item + "\n"
+        byteStr = str.encode("ascii")
+    return byteStr
 
 #function that uses chacha20 to encrypt
 def encryption(message, key):
@@ -59,20 +69,28 @@ def ASCIItoDECIMAL(toconvert): #DEBUGGED - WORKING
     return convertedString
 
 #Function that generates a key from a string (Password). It is reversable.
-def seedPass(): #NOT WORKING - TO FIX ASAP
+def seedPass(): #DEBUGGED - WORKING - COULD BE BETTER
     randomNumber = 81776850632311620355058304162600 #literally just a random number
     stringDecimalPass = ASCIItoDECIMAL(masterPassword())
+    decimalPass = int(stringDecimalPass)
 
     key = randomNumber ^ decimalPass
 
     return key
+
 #Procedure to create a TEMPORARY PLAINTEXT FILE
 def createTempPlainTXT(data): #POSSIBLE INSECURITY
-    with open("plaintextTEMP.txt", "w") as plaintext:
+    with open("plaintextTEMP.txt", "wb") as plaintext:
         plaintext.write(data)
 
-print(seedPass())
+createTempPlainTXT(convertTuple(userInput()))
 
+#def encryptPlainTXT():
+ #   toEncrypt = []
+  #  with open("plaintextTEMP.txt", "r") as ciphertext:
+   #     ciphertext.read()
+    #    for char in ciphertext:
+            
 
 
 
