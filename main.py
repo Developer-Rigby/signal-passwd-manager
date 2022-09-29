@@ -83,13 +83,52 @@ def createTempPlainTXT(data): #POSSIBLE INSECURITY
     with open("plaintextTEMP.txt", "wb") as plaintext:
         plaintext.write(data)
 
-createTempPlainTXT(convertTuple(userInput()))
+def encryptPlainTXT(): #NOT WORKING
+    toEncrypt = []
+    with open("plaintextTEMP.txt", "r") as ciphertext:
+        ciphertext.read()
+        for char in ciphertext:
+            x = encryption(char, seedPass())
+            toEncrypt.append(x)
+    return toEncrypt
 
-#def encryptPlainTXT():
- #   toEncrypt = []
-  #  with open("plaintextTEMP.txt", "r") as ciphertext:
-   #     ciphertext.read()
-    #    for char in ciphertext:
+createTempPlainTXT(b"Test")
+print(encryptPlainTXT())
+
+def main():
+    #This is the menu logo screen
+    print(" .--.  _                    .-.                                                    .-.                                                ")
+    print(": .--':_;                   : :                                                    : :                                                ")
+    print("`. `. .-. .--. ,-.,-. .--.  : :    .---.  .--.   .--.  .--. .-..-..-. .--. .--.  .-' :  ,-.,-.,-. .--.  ,-.,-. .--.   .--.  .--. .--. ")
+    print(" _`, :: :' .; :: ,. :' .; ; : :_   : .; `' .; ; `._-.'`._-.': `; `; :' .; :: ..'' .; :  : ,. ,. :' .; ; : ,. :' .; ; ' .; :' '_.': ..'")
+    print("`.__.':_;`._. ;:_;:_;`.__,_;`.__;  : ._.'`.__,_;`.__.'`.__.'`.__.__.'`.__.':_;  `.__.'  :_;:_;:_;`.__,_;:_;:_;`.__,_;`._. ;`.__.':_;  ")
+    print("          .-. :                    : :                                                                                .-. :           ")
+    print("          `._.'                    :_;                                                                                `._.'           ")
+    
+
+    print("*Please select and option*")
+    print("1. Create Database")
+    print("2. Append Data")
+    print("3. View Data")
+    print("4. Delete Database")
+    print("5. Exit...")
+
+    option = input("Please select an option: ")
+    match option:
+        case "1":
+            print(1)
+        case "2":
+            print(2)
+        case "3":
+            print(3)
+        case "4":
+            print(4)
+        case "5":
+            print("*Exiting*")
+            exit()
+        case _:
+            print("Invalid. Try Again.")
+    
             
 
 
