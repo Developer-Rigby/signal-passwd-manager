@@ -1,4 +1,5 @@
 from abc import abstractstaticmethod
+from distutils.log import debug
 from lib2to3.pytree import convert
 from pydoc import doc
 from random import seed
@@ -34,12 +35,7 @@ def userInput(): #DEBUGGED - WORKS - COULD BE BETTER
         passwordRetry = getpass.getpass("Please retype your password: ")
 
         if password != passwordRetry:
-            print("Those passwords did not match. Please try again.")
-
-#turning strings into bytes
-#  idByte = bytes(id, 'ascii')
-#   usernameByte = bytes(username, 'ascii')
-#    passwordByte = bytes(password, 'ascii')    
+            print("Those passwords did not match. Please try again.") 
 
     return id, username, password
 
@@ -58,6 +54,8 @@ def encryption(message, key):
     ciphertext = cipher.encrypt(message)
     return ciphertext
 
+def decryption()
+
 #Function that converts ASCII to their corresponding Decimal counterpart.
 def ASCIItoDECIMAL(toconvert): #DEBUGGED - WORKING
     convertedArray = []
@@ -72,28 +70,44 @@ def ASCIItoDECIMAL(toconvert): #DEBUGGED - WORKING
 def seedPass(): #DEBUGGED - WORKING - COULD BE BETTER
     randomNumber = 81776850632311620355058304162600 #literally just a random number
     stringDecimalPass = ASCIItoDECIMAL(masterPassword())
+    stringDecimalPass = stringDecimalPass.replace(' ', '') #replaces all spaces with no spaces.
     decimalPass = int(stringDecimalPass)
 
-    key = randomNumber ^ decimalPass
+    stringKey = randomNumber ^ decimalPass
+    key = stringKey.to_bytes(32, 'big')
 
     return key
 
+def encryptedData(key):
+    encryptedString = encryption(convertTuple(userInput()), key)
+    return encryptedString
+
+def createCipherTXT(encryptedData):
+    with open("encryptedTXT.txt", "wb") as ciphertext:
+        ciphertext.write(encryptedData)
+
+def debugging():
+    key = seedPass()
+    ciphertext = encryptedData(key)
+    createCipherTXT(ciphertext)
+    print("done")
+
+debugging()
 #Procedure to create a TEMPORARY PLAINTEXT FILE
-def createTempPlainTXT(data): #POSSIBLE INSECURITY
-    with open("plaintextTEMP.txt", "wb") as plaintext:
-        plaintext.write(data)
+#def createTempPlainTXT(data): #POSSIBLE INSECURITY
+#    with open("plaintextTEMP.txt", "wb") as plaintext:
+#        plaintext.write(data)
 
-def encryptPlainTXT(): #NOT WORKING
-    toEncrypt = []
-    with open("plaintextTEMP.txt", "r") as ciphertext:
-        ciphertext.read()
-        for char in ciphertext:
-            x = encryption(char, seedPass())
-            toEncrypt.append(x)
-    return toEncrypt
+#def encryptPlainTXT(): #NOT WORKING - I don't even think this is needed along with the creation of the plain text
+#    toEncrypt = []
+#    with open("plaintextTEMP.txt", "rb") as ciphertext:
+#        ciphertext.read()
+#        for byte in ciphertext:
+#            x = encryption(char, seedPass())
+#            toEncrypt.append(x)
+#    return toEncrypt
 
-createTempPlainTXT(b"Test")
-print(encryptPlainTXT())
+
 
 def main():
     #This is the menu logo screen
@@ -113,6 +127,7 @@ def main():
     print("4. Delete Database")
     print("5. Exit...")
 
+
     option = input("Please select an option: ")
     match option:
         case "1":
@@ -128,8 +143,7 @@ def main():
             exit()
         case _:
             print("Invalid. Try Again.")
-    
-            
+        
 
 
 
