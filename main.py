@@ -25,14 +25,14 @@ def masterPassword(): #DEBUGGED - WORKS
     return mast_passwd
 
 def userInput(): #DEBUGGED - WORKS - COULD BE BETTER
-    id = input("Please specify the service: ")
-    username = input("Please state what username/email you use for this service: ")
+    id = 'Service: ' + input("Please specify the service: ")
+    username = 'User: ' + input("Please state what username/email you use for this service: ")
     
     password = 0
     passwordRetry = 1
     while password != passwordRetry:
-        password = getpass.getpass("Please input your password for this service: ")
-        passwordRetry = getpass.getpass("Please retype your password: ")
+        password = 'Password: ' + getpass.getpass("Please input your password for this service: ")
+        passwordRetry = 'Password: ' + getpass.getpass("Please retype your password: ")
 
         if password != passwordRetry:
             print("Those passwords did not match. Please try again.") 
@@ -49,13 +49,13 @@ def convertTuple(tup):
     return byteStr
 
 #function that uses chacha20 to encrypt
-def encryption(message, key):
-    cipher = ChaCha20.new(key = key)
+def encryption(message, key, nonce):
+    cipher = ChaCha20.new(key = key, nonce = nonce)
     ciphertext = cipher.encrypt(message)
     return ciphertext
 
-def decryption(message, key):
-    cipher = ChaCha20.new(key = key)
+def decryption(message, key, nonce):
+    cipher = ChaCha20.new(key = key, nonce = nonce)
     plaintext = cipher.decrypt(message)
     return plaintext
 
@@ -81,22 +81,30 @@ def seedPass(): #DEBUGGED - WORKING - COULD BE BETTER
 
     return key
 
-def encryptedData(key):
-    encryptedString = encryption(convertTuple(userInput()), key)
+def encryptedData(key, nonce):
+    encryptedString = encryption(convertTuple(userInput()), key, nonce)
     return encryptedString
+
+def decryptedData(ciphertext, key, nonce):
+    decryptedBytes = decryption(ciphertext, key, nonce)
+    decryptedString = str(decryptedBytes)
+    data = decryptedString[2:]
+    return data
 
 def createCipherTXT(encryptedData):
     with open("encryptedTXT.txt", "wb") as ciphertext:
         ciphertext.write(encryptedData)
 
 def debugging():
+    nonce = os.urandom(12)
     key = seedPass()
-    ciphertext = encryptedData(key)
+    ciphertext = encryptedData(key, nonce)
     createCipherTXT(ciphertext)
     print("done encryption")
-    
+    print(decryptedData(ciphertext, key, nonce))
+    print('nonce: ' + str(nonce))
 
-debugging()
+    
 #Procedure to create a TEMPORARY PLAINTEXT FILE
 #def createTempPlainTXT(data): #POSSIBLE INSECURITY
 #    with open("plaintextTEMP.txt", "wb") as plaintext:
@@ -135,7 +143,7 @@ def main():
     option = input("Please select an option: ")
     match option:
         case "1":
-            print(1)
+            debugging()
         case "2":
             print(2)
         case "3":
@@ -149,7 +157,7 @@ def main():
             print("Invalid. Try Again.")
         
 
-
+main()
 
 
 
