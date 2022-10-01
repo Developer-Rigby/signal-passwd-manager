@@ -54,7 +54,10 @@ def encryption(message, key):
     ciphertext = cipher.encrypt(message)
     return ciphertext
 
-def decryption()
+def decryption(message, key):
+    cipher = ChaCha20.new(key = key)
+    plaintext = cipher.decrypt(message)
+    return plaintext
 
 #Function that converts ASCII to their corresponding Decimal counterpart.
 def ASCIItoDECIMAL(toconvert): #DEBUGGED - WORKING
@@ -90,7 +93,8 @@ def debugging():
     key = seedPass()
     ciphertext = encryptedData(key)
     createCipherTXT(ciphertext)
-    print("done")
+    print("done encryption")
+    
 
 debugging()
 #Procedure to create a TEMPORARY PLAINTEXT FILE
