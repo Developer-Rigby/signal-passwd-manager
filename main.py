@@ -88,7 +88,7 @@ def encryptedData(key, nonce):
 def decryptedData(ciphertext, key, nonce):
     decryptedBytes = decryption(ciphertext, key, nonce)
     decryptedString = str(decryptedBytes)
-    data = decryptedString[2:]
+    data = decryptedString
     return data
 
 def createCipherTXT(encryptedData):
