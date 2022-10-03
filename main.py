@@ -21,7 +21,6 @@ def masterPassword(): #DEBUGGED - WORKS
         if mast_passwd != mast_passwdRetry:
             print("Those passwords did not match. Please try again.")
 
-    print("[Password Saved]")
     return mast_passwd
 
 def userInput(): #DEBUGGED - WORKS - COULD BE BETTER
@@ -87,22 +86,38 @@ def encryptedData(key, nonce):
 
 def decryptedData(ciphertext, key, nonce):
     decryptedBytes = decryption(ciphertext, key, nonce)
-    decryptedString = str(decryptedBytes)
-    data = decryptedString
-    return data
+    decryptedString = decryptedBytes.decode("UTF-8")
+    return decryptedString
 
 def createCipherTXT(encryptedData):
     with open("encryptedTXT.txt", "wb") as ciphertext:
         ciphertext.write(encryptedData)
-
 def debugging():
     nonce = os.urandom(12)
     key = seedPass()
     ciphertext = encryptedData(key, nonce)
     createCipherTXT(ciphertext)
     print("done encryption")
+    print(ciphertext)
+    print("done decryptions")
     print(decryptedData(ciphertext, key, nonce))
     print('nonce: ' + str(nonce))
+
+#Although it's not generally secure to reuse a nonce (you should really never do it especcially in cloud based situations), we will do it here as everything is client side.
+#Still, never do it. Replay attacks can still occur especially if the user uses both the same key and nonce. I'll only be keeping it until I figure out a way to not save the nonce.
+def createDatabase(): #SECURITY VULNERABILITY
+    nonce = b'K\x8b\xa9\xf2\xfc\x06\x9br\xdb\xcb\xaaH'
+    key = seedPass()
+    ciphertext = encryptedData(key, nonce)
+    createCipherTXT(ciphertext)
+    print("[Saved - Encryption complete]")
+
+def decryptDatabase():
+    nonce = b'K\x8b\xa9\xf2\xfc\x06\x9br\xdb\xcb\xaaH'
+    key = seedPass()
+    with open("encryptedTXT.txt", "rb") as ciphertext:
+        jargon = ciphertext.read()
+        print(decryptedData(jargon, key, nonce))
 
     
 #Procedure to create a TEMPORARY PLAINTEXT FILE
@@ -143,13 +158,13 @@ def main():
     option = input("Please select an option: ")
     match option:
         case "1":
-            debugging()
+            createDatabase()
         case "2":
             print(2)
         case "3":
-            print(3)
+            decryptDatabase()
         case "4":
-            print(4)
+            print(os.urandom(24))
         case "5":
             print("*Exiting*")
             exit()
