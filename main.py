@@ -23,18 +23,24 @@ def masterPassword(): #DEBUGGED - WORKS
 
     return mast_passwd
 
-def userInput(): #DEBUGGED - WORKS - COULD BE BETTER
-    id = 'Service: ' + input("Please specify the service: ")
-    username = 'User: ' + input("Please state what username/email you use for this service: ")
-    
-    password = 0
-    passwordRetry = 1
-    while password != passwordRetry:
-        password = 'Password: ' + getpass.getpass("Please input your password for this service: ")
-        passwordRetry = 'Password: ' + getpass.getpass("Please retype your password: ")
+def userInput(): #DEBUGGED - DOES NOT WORK - OVERRIDES THE VALUES
+    serviceAmountString = input("How many services are you writing?:  ")
+    serviceAmount = int(serviceAmountString)
+    interval = 0 #Defining a c++ style for loop in python. I have never done this and I wish that it was more like c++
+    while interval < serviceAmount:
 
-        if password != passwordRetry:
-            print("Those passwords did not match. Please try again.") 
+        id = 'Service: ' + input("Please specify the service: ")
+        username = 'User: ' + input("Please state what username/email you use for this service: ")
+        
+        password = 0
+        passwordRetry = 1
+        while password != passwordRetry:
+            password = 'Password: ' + getpass.getpass("Please input your password for this service: ")
+            passwordRetry = 'Password: ' + getpass.getpass("Please retype your password: ")
+
+            if password != passwordRetry:
+                print("Those passwords did not match. Please try again.") 
+        interval = interval + 1
 
     return id, username, password
 
