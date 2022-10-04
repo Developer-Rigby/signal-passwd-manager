@@ -23,14 +23,18 @@ def masterPassword(): #DEBUGGED - WORKS
 
     return mast_passwd
 
-def userInput(): #DEBUGGED - DOES NOT WORK - OVERRIDES THE VALUES
+def userInput(): #DEBUGGED - WORKS - RETURNS TUPLE ARRAYS
+    id = []
+    username = []
+    passwordS = []
+
     serviceAmountString = input("How many services are you writing?:  ")
     serviceAmount = int(serviceAmountString)
     interval = 0 #Defining a c++ style for loop in python. I have never done this and I wish that it was more like c++
     while interval < serviceAmount:
 
-        id = 'Service: ' + input("Please specify the service: ")
-        username = 'User: ' + input("Please state what username/email you use for this service: ")
+        id.append('Service: ' + input("Please specify the service: "))
+        username.append('User: ' + input("Please state what username/email you use for this service: "))
         
         password = 0
         passwordRetry = 1
@@ -38,19 +42,22 @@ def userInput(): #DEBUGGED - DOES NOT WORK - OVERRIDES THE VALUES
             password = 'Password: ' + getpass.getpass("Please input your password for this service: ")
             passwordRetry = 'Password: ' + getpass.getpass("Please retype your password: ")
 
+            if password == passwordRetry:
+                passwordS.append(password + '\n')
+
             if password != passwordRetry:
                 print("Those passwords did not match. Please try again.") 
         interval = interval + 1
 
-    return id, username, password
+    serviceTuples = zip(id, username, passwordS)
+    serviceLists = [item for t in serviceTuples for item in t]
+    return serviceLists
 
-#With this convertTuple
-def convertTuple(tup):
-        # initialize an empty string
+def convertList(list):
     str = ''
-    for item in tup:
-        str = str + item + "\n"
-        byteStr = str.encode("ascii")
+    for elem in list:
+        str = str + elem + '\n'
+        byteStr = str.encode('ascii')
     return byteStr
 
 #function that uses chacha20 to encrypt
@@ -87,7 +94,7 @@ def seedPass(): #DEBUGGED - WORKING - COULD BE BETTER
     return key
 
 def encryptedData(key, nonce):
-    encryptedString = encryption(convertTuple(userInput()), key, nonce)
+    encryptedString = encryption(convertList(userInput()), key, nonce)
     return encryptedString
 
 def decryptedData(ciphertext, key, nonce):
@@ -99,15 +106,8 @@ def createCipherTXT(encryptedData):
     with open("encryptedTXT.txt", "wb") as ciphertext:
         ciphertext.write(encryptedData)
 def debugging():
-    nonce = os.urandom(12)
-    key = seedPass()
-    ciphertext = encryptedData(key, nonce)
-    createCipherTXT(ciphertext)
-    print("done encryption")
-    print(ciphertext)
-    print("done decryptions")
-    print(decryptedData(ciphertext, key, nonce))
-    print('nonce: ' + str(nonce))
+    print(userInput())
+
 
 #Although it's not generally secure to reuse a nonce (you should really never do it especcially in cloud based situations), we will do it here as everything is client side.
 #Still, never do it. Replay attacks can still occur especially if the user uses both the same key and nonce. I'll only be keeping it until I figure out a way to not save the nonce.
@@ -159,6 +159,7 @@ def main():
     print("3. View Data")
     print("4. Delete Database")
     print("5. Exit...")
+    print("6. **DEBUGGING - DEV ONLY**")
 
 
     option = input("Please select an option: ")
@@ -170,10 +171,12 @@ def main():
         case "3":
             decryptDatabase()
         case "4":
-            print(os.urandom(24))
+            print(4)
         case "5":
             print("*Exiting*")
             exit()
+        case "6":
+            debugging()
         case _:
             print("Invalid. Try Again.")
         
