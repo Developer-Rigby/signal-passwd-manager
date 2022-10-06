@@ -1,4 +1,4 @@
-# "Signal" Password Manager
+# "Signal" Password Manager **[WIP]**
 
 Signal Password Manager is a terminal based (Hoping to oneday make it GUI based) password manager that relies on the ChaCha20 cryptographic cipher to encrypt your passwords. This is currently a work in progress file.
 
@@ -9,4 +9,4 @@ As this is a personal project, use it at your own risk and understand that I can
 + Incorporate option to append an already existing database
 + Fix the program asking to enter a password twice for a database that already exists
 + Create and "if error -> password incorrect"
-+ Organise my code into many different files. 
++ ~~Organise my code into many different files.~~
