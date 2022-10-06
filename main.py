@@ -92,19 +92,26 @@ def seedPass(): #DEBUGGED - WORKING - COULD BE BETTER
     key = stringKey.to_bytes(32, 'big')
 
     return key
+    
 
-def encryptedData(key, nonce):
-    encryptedString = encryption(convertList(userInput()), key, nonce)
-    return encryptedString
+def encryptedData(key, nonce): #DEBUGGED - WORKS
+    #long process that usees above functions to take user inputted data and return encrypted data
+    serviceInput = userInput()
+    inputToList = convertList(serviceInput)
+    encryptedUserData = encryption(inputToList, key, nonce)
 
-def decryptedData(ciphertext, key, nonce):
+    return encryptedUserData
+
+def decryptedData(ciphertext, key, nonce): #DEBUGGED - WORKS
     decryptedBytes = decryption(ciphertext, key, nonce)
     decryptedString = decryptedBytes.decode("UTF-8")
     return decryptedString
 
-def createCipherTXT(encryptedData):
+#creates a txt with encrypted hexadecimal that cannot be read without the key/password
+def createCipherTXT(encryptedData): #DEBUGGED - WORKS - Could be better
     with open("encryptedTXT.txt", "wb") as ciphertext:
         ciphertext.write(encryptedData)
+
 def debugging():
     print(userInput())
 
@@ -125,24 +132,23 @@ def decryptDatabase():
         jargon = ciphertext.read()
         print(decryptedData(jargon, key, nonce))
 
-    
-#Procedure to create a TEMPORARY PLAINTEXT FILE
-#def createTempPlainTXT(data): #POSSIBLE INSECURITY
-#    with open("plaintextTEMP.txt", "wb") as plaintext:
-#        plaintext.write(data)
+def deleteDataBase():
+    if os.path.exists("encryptedTXT.txt"):
+        inputDeleteDatabase = input("Delete this database? y/n: ")
+        while inputDeleteDatabase != "y" or "n":
+            if inputDeleteDatabase == "y":
+                os.remove("encryptedTXT.txt")
+                print("##########################")
+                menuScreen()
+            elif inputDeleteDatabase == "n":
+                print("[Database not deleted]")
+                return 0
+            else:
+                inputDeleteDatabase = input("Invalid. Please try again: ")
+    else:
+        print("Database does not exist.")
 
-#def encryptPlainTXT(): #NOT WORKING - I don't even think this is needed along with the creation of the plain text
-#    toEncrypt = []
-#    with open("plaintextTEMP.txt", "rb") as ciphertext:
-#        ciphertext.read()
-#        for byte in ciphertext:
-#            x = encryption(char, seedPass())
-#            toEncrypt.append(x)
-#    return toEncrypt
-
-
-
-def main():
+def splashScreen():
     #This is the menu logo screen
     print(" .--.  _                    .-.                                                    .-.                                                ")
     print(": .--':_;                   : :                                                    : :                                                ")
@@ -151,8 +157,8 @@ def main():
     print("`.__.':_;`._. ;:_;:_;`.__,_;`.__;  : ._.'`.__,_;`.__.'`.__.'`.__.__.'`.__.':_;  `.__.'  :_;:_;:_;`.__,_;:_;:_;`.__,_;`._. ;`.__.':_;  ")
     print("          .-. :                    : :                                                                                .-. :           ")
     print("          `._.'                    :_;                                                                                `._.'           ")
-    
 
+def menuScreen():
     print("*Please select and option*")
     print("1. Create Database")
     print("2. Append Data")
@@ -160,7 +166,6 @@ def main():
     print("4. Delete Database")
     print("5. Exit...")
     print("6. **DEBUGGING - DEV ONLY**")
-
 
     option = input("Please select an option: ")
     match option:
@@ -171,15 +176,19 @@ def main():
         case "3":
             decryptDatabase()
         case "4":
-            print(4)
+            deleteDataBase()
         case "5":
-            print("*Exiting*")
+            print("*Exiting Program*")
             exit()
         case "6":
             debugging()
         case _:
             print("Invalid. Try Again.")
+            menuScreen()
         
+def main():
+    splashScreen()
+    menuScreen()
 
 main()
 
