@@ -1,6 +1,6 @@
 # "Signal" Password Manager
 
-Signal Passowrd Manager is a terminal based (Hoping to oneday make it GUI based) password manager that relies on the ChaCha20 cryptographic cipher to encrypt your passwords. This is currently a work in progress file.
+Signal Password Manager is a terminal based (Hoping to oneday make it GUI based) password manager that relies on the ChaCha20 cryptographic cipher to encrypt your passwords. This is currently a work in progress file.
 
 As this is a personal project, use it at your own risk and understand that I cannot claim responisiblity for issues that occur. I am open to all feedback; in fact I would really like feedback.
 
