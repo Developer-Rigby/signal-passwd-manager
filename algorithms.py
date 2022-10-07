@@ -1,5 +1,7 @@
 from Crypto.Cipher import ChaCha20
 from lib2to3.pytree import convert
+
+from numpy import save
 from user_inputs import *
 import string
 import os
@@ -41,15 +43,19 @@ def decryptedData(ciphertext, key, nonce): #DEBUGGED - WORKS
     return decryptedString
 
 #creates a txt with encrypted hexadecimal that cannot be read without the key/password
-def createCipherTXT(encryptedData): #DEBUGGED - WORKS - Could be better
-    with open("encryptedTXT.txt", "wb") as ciphertext:
+def createCipherTXT(encryptedData, userDBname): #DEBUGGED - WORKS - Could be better
+    save_path = './databases/' #Telling the program to save to this directory
+    completefilename = os.path.join(save_path, userDBname + ".txt")
+    with open(completefilename, "wb") as ciphertext:
         ciphertext.write(encryptedData)
 
+
 def createDatabase(): #SECURITY VULNERABILITY
+    userDBname = input("What would you like to name this database: ")
     nonce = b'K\x8b\xa9\xf2\xfc\x06\x9br\xdb\xcb\xaaH'
     key = seedPass()
     ciphertext = encryptedData(key, nonce)
-    createCipherTXT(ciphertext)
+    createCipherTXT(ciphertext, userDBname)
     print("[Saved - Encryption complete]")
 
 def decryptDatabase():
@@ -59,12 +65,12 @@ def decryptDatabase():
         jargon = ciphertext.read()
         print(decryptedData(jargon, key, nonce))
 
-def deleteDataBase():
-    if os.path.exists("encryptedTXT.txt"):
+def deleteDataBase(userDBname):
+    if os.path.exists(userDBname):
         inputDeleteDatabase = input("Delete this database? y/n: ")
         while inputDeleteDatabase != "y" or "n":
             if inputDeleteDatabase == "y":
-                os.remove("encryptedTXT.txt")
+                os.remove(userDBname)
                 print("##########################")
                 menuScreen()
             elif inputDeleteDatabase == "n":
@@ -90,10 +96,10 @@ def menuScreen():
     print("*Please select and option*")
     print("1. Create Database")
     print("2. Append Data")
-    print("3. View Data")
-    print("4. Delete Database")
-    print("5. Exit...")
-    print("6. **DEBUGGING - DEV ONLY**")
+    print("3. View Databases")
+    print("4. View Data")
+    print("5. Delete Database")
+    print("6. Exit...")
 
     option = input("Please select an option: ")
     match option:
@@ -102,14 +108,17 @@ def menuScreen():
         case "2":
             print(2)
         case "3":
-            decryptDatabase()
+            print(0)
         case "4":
-            deleteDataBase()
+            decryptDatabase()
         case "5":
+            userDBname = input("What database would you like to delete: ")
+            pathName = './databases/'
+            full_path = os.path.join(pathName, userDBname + '.txt')
+            deleteDataBase(full_path)
+        case "6":
             print("*Exiting Program*")
             exit()
-        case "6":
-            print(6)
         case _:
             print("Invalid. Try Again.")
             menuScreen()
