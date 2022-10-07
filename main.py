@@ -6,7 +6,3 @@ def main():
     menuScreen()
 
 main()
-
-
-
-

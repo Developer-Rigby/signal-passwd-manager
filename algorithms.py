@@ -1,6 +1,6 @@
 from Crypto.Cipher import ChaCha20
 from lib2to3.pytree import convert
-
+import glob
 from numpy import save
 from user_inputs import *
 import string
@@ -18,9 +18,9 @@ def decryption(message, key, nonce):
     return plaintext
 
 #Function that generates a key from a string (Password). It is reversable.
-def seedPass(): #DEBUGGED - WORKING - COULD BE BETTER
+def seedPass(masterpass): #DEBUGGED - WORKING - COULD BE BETTER
     randomNumber = 81776850632311620355058304162600 #literally just a random number
-    stringDecimalPass = ASCIItoDECIMAL(masterPassword())
+    stringDecimalPass = ASCIItoDECIMAL(masterpass)
     stringDecimalPass = stringDecimalPass.replace(' ', '') #replaces all spaces with no spaces.
     decimalPass = int(stringDecimalPass)
 
@@ -53,17 +53,29 @@ def createCipherTXT(encryptedData, userDBname): #DEBUGGED - WORKS - Could be bet
 def createDatabase(): #SECURITY VULNERABILITY
     userDBname = input("What would you like to name this database: ")
     nonce = b'K\x8b\xa9\xf2\xfc\x06\x9br\xdb\xcb\xaaH'
-    key = seedPass()
+    key = seedPass(masterPassword())
     ciphertext = encryptedData(key, nonce)
     createCipherTXT(ciphertext, userDBname)
     print("[Saved - Encryption complete]")
 
-def decryptDatabase():
+def decryptDatabase(selectedDatabase):
     nonce = b'K\x8b\xa9\xf2\xfc\x06\x9br\xdb\xcb\xaaH'
-    key = seedPass()
-    with open("encryptedTXT.txt", "rb") as ciphertext:
-        jargon = ciphertext.read()
-        print(decryptedData(jargon, key, nonce))
+    enterPass = getpass.getpass("Please enter your master password: ")
+    try:
+        key = seedPass(enterPass)
+        save_path = './databases/'
+        completefilename = os.path.join(save_path, selectedDatabase + '.txt')
+        if os.path.exists(completefilename):
+            with open(completefilename, "rb") as ciphertext:
+                jargon = ciphertext.read()
+                print(decryptedData(jargon, key, nonce))
+        else:
+            print("File path does not exist. Please try again")
+            menuScreen()
+    except UnicodeDecodeError: #If the program cannot decode because the key was wrong, this output is displayed
+        print("***Invalid Password***")
+        print("###############")
+        menuScreen()
 
 def deleteDataBase(userDBname):
     if os.path.exists(userDBname):
@@ -81,6 +93,9 @@ def deleteDataBase(userDBname):
     else:
         print("Database does not exist.")
 
+def printDatabases():
+    print(glob.glob("./databases/*"))
+
 #I put this here to avoid spaghetti; Even though there is still spaghetti
 def splashScreen():
     #This is the menu logo screen
@@ -95,28 +110,30 @@ def splashScreen():
 def menuScreen():
     print("*Please select and option*")
     print("1. Create Database")
-    print("2. Append Data")
-    print("3. View Databases")
-    print("4. View Data")
-    print("5. Delete Database")
-    print("6. Exit...")
+    print("2. Print Available Databases")
+    print("3. View Data")
+    print("4. Delete Database")
+    print("5. Exit...")
 
     option = input("Please select an option: ")
     match option:
         case "1":
             createDatabase()
         case "2":
-            print(2)
+            printDatabases()
+            print("################")
+            menuScreen()
         case "3":
-            print(0)
+            selectedDatabase = input("Please enter the database you would like to view: ")
+            decryptDatabase(selectedDatabase)
+            print("###############")
+            menuScreen()
         case "4":
-            decryptDatabase()
-        case "5":
             userDBname = input("What database would you like to delete: ")
             pathName = './databases/'
             full_path = os.path.join(pathName, userDBname + '.txt')
             deleteDataBase(full_path)
-        case "6":
+        case "5":
             print("*Exiting Program*")
             exit()
         case _:

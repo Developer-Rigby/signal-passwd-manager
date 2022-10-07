@@ -6,7 +6,6 @@ As this is a personal project, use it at your own risk and understand that I can
 
 ## To-Do
 + ~~Add option to add new databases apart from just having one~~
-+ Incorporate option to append an already existing database
-+ Fix the program asking to enter a password twice for a database that already exists
-+ Create and "if error -> password incorrect"
++ ~~Fix the program asking to enter a password twice for a database that already exists~~
++ ~~Create and "if error -> password incorrect" i.e. error handling~~
 + ~~Organise my code into many different files.~~

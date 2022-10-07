@@ -14,6 +14,7 @@ def masterPassword(): #DEBUGGED - WORKS
             print("Those passwords did not match. Please try again.")
 
     return mast_passwd
+    
 
 def userInput(): #DEBUGGED - WORKS - RETURNS TUPLE ARRAYS
     id = []
